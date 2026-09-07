@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form with CSS</title>
+    
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Vibrant Neon Gradient Background */
+        body {
+            background: linear-gradient(135deg, #ff007f 0%, #7928ca 50%, #00dfd8 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* High-Contrast Card with Glowing Border */
+        .wrapper {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(20px);
+            width: 100%;
+            max-width: 460px;
+            padding: 40px 30px;
+            border-radius: 28px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.3), 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Step Progress Line with Electric Cyan Glow */
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            height: 4px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            z-index: 1;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            height: 4px;
+            width: 0%;
+            background: linear-gradient(90deg, #ff007f, #00dfd8);
+            box-shadow: 0 0 12px #00dfd8;
+            z-index: 1;
+            transition: width 0.4s ease;
+        }
+
+        .step-node {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #1e293b;
+            border: 2px solid #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #94a3b8;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .step-node.active {
+            border-color: #00dfd8;
+            color: #00dfd8;
+            background: #0f172a;
+            box-shadow: 0 0 15px #00dfd8;
+        }
+
+        .step-node.completed {
+            background: linear-gradient(135deg, #ff007f, #7928ca);
+            border-color: transparent;
+            color: #ffffff;
+            box-shadow: 0 0 10px #ff007f;
+        }
+
+        /* Form Card */
+        .form-card {
+            display: none;
+        }
+
+        .form-card.active {
+            display: block;
+            animation: zoomIn 0.35s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .form-card h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ff7171, #ff007f, #00dfd8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 0.88rem;
+            color: #cbd5e1;
+            margin-bottom: 25px;
+        }
+
+        /* Input Controls */
+        .input-group {
+            position: relative;
+            margin-bottom: 22px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff007f;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .input-group input, 
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 14px 16px 14px 45px;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.07);
+            border: 2px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            outline: none;
+            transition: all 0.25s ease;
+            color: #ffffff;
+        }
+
+        .input-group textarea {
+            padding-left: 16px;
+            resize: none;
+        }
+
+        .input-group select {
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .input-group select option {
+            background: #0f172a;
+            color: #ffffff;
+        }
+
+        /* Focus States with Neon Glow */
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            border-color: #00dfd8;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 12px rgba(0, 223, 216, 0.4);
+        }
+
+        .input-group input:focus + i {
+            color: #00dfd8;
+        }
+
+        .error {
+            color: #ff4d6d;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: block;
+            font-weight: 600;
+        }
+
+        /* Action Buttons */
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #ff007f 0%, #7928ca 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.4);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.7);
+            background: linear-gradient(90deg, #7928ca 0%, #00dfd8 100%);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-line" id="progressLine"></div>
+            <div class="step-node active" id="node1">1</div>
+            <div class="step-node" id="node2">2</div>
+            <div class="step-node" id="node3">3</div>
+        </div>
+
+        <!-- STEP 1: REGISTER FORM -->
+        <div id="step1" class="form-card active">
+            <h2>Create Account</h2>
+            <p class="subtitle">Enter your details to get started with us.</p>
+            <form id="regForm" novalidate>
+                <div class="input-group">
+                    <input type="text" id="regUser" placeholder="Username">
+                    <i class="fa-solid fa-user"></i>
+                    <span class="error" id="regUserErr"></span>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="regEmail" placeholder="Email Address">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span class="error" id="regEmailErr"></span>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="regPass" placeholder="Password (Min 6 chars + digit)">
+                    <i class="fa-solid fa-lock"></i>
+                    <span class="error" id="regPassErr"></span>
+                </div>
+                <button type="submit" class="btn-submit">Register <i class="fa-solid fa-bolt"></i></button>
+            </form>
+        </div>
+
+        <!-- STEP 2: LOGIN FORM -->
+        <div id="step2" class="form-card">
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Log in using your registered credentials.</p>
+            <form id="loginForm" novalidate>
+                <div class="input-group">
+                    <input type="email" id="loginEmail" placeholder="Registered Email">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span class="error" id="loginEmailErr"></span>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="loginPass" placeholder="Password">
+                    <i class="fa-solid fa-key"></i>
+                    <span class="error" id="loginPassErr"></span>
+                </div>
+                <button type="submit" class="btn-submit">Login <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
+            </form>
+        </div>
+
+        <!-- STEP 3: FEEDBACK FORM -->
+        <div id="step3" class="form-card">
+            <h2>Send Feedback</h2>
+            <p class="subtitle">Tell us what you think about our service.</p>
+            <form id="feedbackForm" novalidate>
+                <div class="input-group">
+                    <input type="text" id="fbName" placeholder="Your Name">
+                    <i class="fa-solid fa-id-badge"></i>
+                    <span class="error" id="fbNameErr"></span>
+                </div>
+                
+                <div class="input-group">
+                    <select id="fbRating">
+                        <option value="">Select Rating</option>
+                        <option value="5">5 ★ - Excellent</option>
+                        <option value="4">4 ★ - Very Good</option>
+                        <option value="3">3 ★ - Good</option>
+                    </select>
+                    <i class="fa-solid fa-star"></i>
+                    <span class="error" id="fbRatingErr"></span>
+                </div>
+
+                <div class="input-group">
+                    <textarea id="fbComments" rows="3" placeholder="Write comments (min 10 chars)..."></textarea>
+                    <span class="error" id="fbCommentsErr"></span>
+                </div>
+                <button type="submit" class="btn-submit">Submit Feedback <i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let savedUser = { email: '', pass: '' };
+
+        function goToStep(stepNumber) {
+            const steps = document.querySelectorAll('.form-card');
+            for (let i = 0; i < steps.length; i++) {
+                steps[i].classList.remove('active');
+            }
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+
+            const line = document.getElementById('progressLine');
+            line.style.width = ((stepNumber - 1) / 2) * 100 + '%';
+
+            for (let i = 1; i <= 3; i++) {
+                const node = document.getElementById(`node${i}`);
+                if (i < stepNumber) {
+                    node.className = 'step-node completed';
+                    node.innerHTML = '<i class="fa-solid fa-check"></i>';
+                } else if (i === stepNumber) {
+                    node.className = 'step-node active';
+                    node.innerText = i;
+                } else {
+                    node.className = 'step-node';
+                    node.innerText = i;
+                }
+            }
+        }
+
+        function clearErrors(form) {
+            const errors = form.querySelectorAll('.error');
+            for (let i = 0; i < errors.length; i++) {
+                errors[i].innerText = '';
+            }
+        }
+
+        // 1. REGISTRATION FORM VALIDATION
+        document.getElementById('regForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            clearErrors(this);
+            let isValid = true;
+
+            const user = document.getElementById('regUser').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const pass = document.getElementById('regPass').value;
+
+            if (user === '') {
+                document.getElementById('regUserErr').innerText = 'Username required';
+                isValid = false;
+            }
+
+            if (email === '' || !email.includes('@')) {
+                document.getElementById('regEmailErr').innerText = 'Valid email required';
+                isValid = false;
+            }
+
+            let hasDigit = false;
+            for (let i = 0; i < pass.length; i++) {
+                if (pass[i] >= '0' && pass[i] <= '9') {
+                    hasDigit = true;
+                    break;
+                }
+            }
+
+            if (pass.length < 6 || !hasDigit) {
+                document.getElementById('regPassErr').innerText = 'Password must be 6+ chars with a number';
+                isValid = false;
+            }
+
+            if (isValid) {
+                savedUser.email = email;
+                savedUser.pass = pass;
+                goToStep(2);
+            }
+        });
+
+        // 2. LOGIN FORM VALIDATION
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            clearErrors(this);
+            let isValid = true;
+
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPass').value;
+
+            if (email === '' || email !== savedUser.email) {
+                document.getElementById('loginEmailErr').innerText = 'Email does not match registered email';
+                isValid = false;
+            }
+
+            if (pass === '' || pass !== savedUser.pass) {
+                document.getElementById('loginPassErr').innerText = 'Incorrect password';
+                isValid = false;
+            }
+
+            if (isValid) {
+                document.getElementById('fbName').value = savedUser.email.split('@')[0];
+                goToStep(3);
+            }
+        });
+
+        // 3. FEEDBACK FORM VALIDATION
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            clearErrors(this);
+            let isValid = true;
+
+            const name = document.getElementById('fbName').value.trim();
+            const rating = document.getElementById('fbRating').value;
+            const comments = document.getElementById('fbComments').value.trim();
+
+            if (name === '') {
+                document.getElementById('fbNameErr').innerText = 'Name required';
+                isValid = false;
+            }
+
+            if (rating === '') {
+                document.getElementById('fbRatingErr').innerText = 'Select a rating';
+                isValid = false;
+            }
+
+            if (comments.length < 10) {
+                document.getElementById('fbCommentsErr').innerText = 'Comments must be at least 10 characters';
+                isValid = false;
+            }
+
+            if (isValid) {
+                alert('Thank you! Feedback submitted successfully.');
+            }
+        });
+    </script>
+</body>
+</html>
