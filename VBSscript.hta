@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VBScript Calculator & Cookie Demo</title>
+    <hta:application 
+        id="vbsApp"
+        applicationname="VBScriptCalculator"
+        border="thin"
+        caption="yes"
+        showintaskbar="yes"
+        singleinstance="yes"
+        sysmenu="yes">
+
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+        .box { background: white; padding: 15px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #ccc; }
+        button { padding: 6px 12px; cursor: pointer; }
+    </style>
+
+    <script language="VBScript">
+        Option Explicit
+
+        Sub SaveUser()
+            Dim name
+            name = Document.GetElementById("txtName").Value
+            
+            If Trim(name) <> "" Then
+                Document.Cookie = "username=" & name & ";"
+                MsgBox "Name saved to cookie!", 64, "Success"
+            Else
+                MsgBox "Please enter your name.", 48, "Warning"
+            End If
+        End Sub
+
+        Sub LoadUser()
+            Dim cookieData, nameVal
+            cookieData = Document.Cookie
+            
+            If cookieData <> "" Then
+                If InStr(cookieData, "=") > 0 Then
+                    nameVal = Trim(Split(cookieData, "=")(1))
+                    Document.GetElementById("txtName").Value = nameVal
+                    Document.GetElementById("lblWelcome").InnerText = "Welcome back, " & nameVal & "!"
+                End If
+            Else
+                Document.GetElementById("lblWelcome").InnerText = "No cookie saved."
+            End If
+        End Sub
+
+        Sub Calculate()
+            Dim num1, num2, op, result, i, loopText
+            
+            num1 = Document.GetElementById("txtNum1").Value
+            num2 = Document.GetElementById("txtNum2").Value
+            op = Document.GetElementById("selectOp").Value
+
+            If IsNumeric(num1) And IsNumeric(num2) Then
+                num1 = CDbl(num1)
+                num2 = CDbl(num2)
+
+                ' Conditional Statement for Operations
+                If op = "+" Then
+                    result = num1 + num2
+                ElseIf op = "-" Then
+                    result = num1 - num2
+                ElseIf op = "*" Then
+                    result = num1 * num2
+                ElseIf op = "/" Then
+                    If num2 <> 0 Then
+                        result = num1 / num2
+                    Else
+                        MsgBox "Cannot divide by zero!", 16, "Error"
+                        Exit Sub
+                    End If
+                End If
+
+                Document.GetElementById("lblResult").InnerText = "Result: " & result
+
+                ' Loop Demonstration
+                loopText = "Loop Count: "
+                For i = 1 To 3
+                    loopText = loopText & i & " "
+                Next
+                Document.GetElementById("lblLoop").InnerText = loopText
+            Else
+                MsgBox "Please enter valid numbers.", 16, "Input Error"
+            End If
+        End Sub
+    </script>
+</head>
+<body onload="LoadUser()">
+
+    <h2>VBScript Calculator App</h2>
+
+    <!-- Cookie Section -->
+    <div class="box">
+        <h3>1. Cookie Management</h3>
+        <label>User Name: </label>
+        <input type="text" id="txtName">
+        <button onclick="SaveUser()">Save Name</button>
+        <button onclick="LoadUser()">Read Name</button>
+        <br><br>
+        <div id="lblWelcome" style="color: blue; font-weight: bold;"></div>
+    </div>
+
+    <!-- Dynamic Calculator Section -->
+    <div class="box">
+        <h3>2. User Input Calculator</h3>
+        <label>First Number: </label>
+        <input type="text" id="txtNum1" value="10"><br><br>
+
+        <label>Operator: </label>
+        <select id="selectOp">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+        </select><br><br>
+
+        <label>Second Number: </label>
+        <input type="text" id="txtNum2" value="5"><br><br>
+
+        <button onclick="Calculate()">Calculate</button>
+        <br><br>
+        <div id="lblResult" style="color: green; font-weight: bold; font-size: 16px;"></div>
+        <div id="lblLoop" style="color: purple;"></div>
+    </div>
+
+</body>
+</html>
